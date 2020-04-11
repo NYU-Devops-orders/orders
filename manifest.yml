@@ -1,4 +1,4 @@
-# This manifest deploys a Python Flask application with a Cloudant database
+# This manifest deploys a Python Flask application with a ElephantSQL database
 applications:
 - name: nyu-order-service-s20
   path: .
@@ -11,7 +11,7 @@ applications:
   - python_buildpack
   timeout: 180
   services:
-  - Cloudant
+  - ElephantSQL
   env:
     FLASK_APP : service:app
     FLASK_DEBUG : false

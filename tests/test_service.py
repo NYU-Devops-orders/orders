@@ -10,7 +10,7 @@ from unittest import TestCase
 #from unittest.mock import MagicMock #, patch
 from flask_api import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ProductFactory
-from service.models import db
+from service.models import db, OrderStatus
 from service.service import app, init_db
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
@@ -314,4 +314,18 @@ class TestYourResourceServer(TestCase):
             "/orders/{}/products/{}".format(order.id, product_id),
             content_type="application/json"
         )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cancel_order(self):
+        """ Cancel a single Order """
+        test_order = self._create_orders(1)[0]
+        resp = self.app.put('/orders/{}/cancel'.format(test_order.id),
+                            content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        cancelled_order = resp.get_json()
+        self.assertEqual(cancelled_order['status'], OrderStatus.CANCELED)
+
+    def test_cancel_non_existent_order(self):
+        """ Cancel an order that doesn't exist """
+        resp = self.app.put('/orders/0/cancel', content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)

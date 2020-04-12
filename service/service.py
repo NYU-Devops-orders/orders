@@ -13,7 +13,7 @@ from werkzeug.exceptions import NotFound
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 #from flask_sqlalchemy import SQLAlchemy
-from service.models import Order, Product, DataValidationError
+from service.models import Order, Product, DataValidationError,OrderStatus
 
 # Import Flask application
 from . import app
@@ -288,3 +288,24 @@ def check_content_type(content_type):
         return
     app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])# pylint: disable=maybe-no-member
     abort(415, "Content-Type must be {}".format(content_type))
+
+######################################################################
+# CANCEL AN ORDER
+######################################################################
+@app.route('/orders/<int:order_id>/cancel', methods=['PUT'])
+def cancel_orders(order_id):
+    """
+    Cancel the order
+    This endpoint will cancel the order and tell other squads
+    """
+    app.logger.info('Request to cancel the order with id: %s', order_id)
+    order = Order.find(order_id)
+    if not order:
+        raise NotFound("Order with the id '{}' was not found.".format(order_id))
+
+    # TODO should probably check to make sure this order hasn't been shipped or delivered first
+    order.id = order_id
+    order.status = OrderStatus.CANCELED
+    order.save()
+    # Notify other systems like shipping/billing of cancellation...
+    return make_response(jsonify(order.serialize()), status.HTTP_200_OK)

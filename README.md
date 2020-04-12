@@ -56,31 +56,18 @@ If the VM is no longer needed you can remove it with:
     * service/models.py -- the data model using SQLAlchemy
     * tests/test_server.py -- test cases against the service
     * tests/test_models.py -- test cases against the Order model
+    
+    #### API calls
+URL | Operation | Description
+-- | -- | --
+`GET /orders` | READ | List all available routes
+`POST /orders` | CREATE | Create new order
+`GET /orders/:id` | READ | Fetch information for particular order
+`PUT /orders/:id` | UPDATE | Update particular order
+`DELETE /orders/:id` | DELETE | Delete particular order
+`GET /orders/products/:product_id` | READ | Fetch orders for given product
+`PUT /orders/:id/cancel` | PUT | Cancel order for given order id
+`GET /orders/customers/:customer_id` | GET | Fetch orders for a given customer
 
-
-
-Endpoint          Methods  Rule
-----------------  -------  -----------------------------------------------------
-index             GET      /
-
-list_orders     GET      /orders
-
-create_orders   POST     /orders
-
-get_orders      GET      /orders/<order_id>
-
-update_orders   PUT      /orders/<order_id>
-
-delete_orders   DELETE   /orders/<order_id>
-
-list_products    GET      /orders/<int:order_id>/products
-
-create_products  POST     /orders/<order_id>/products
-
-get_products     GET      /orders/<order_id>/products/<product_id>
-
-update_products  PUT      /orders/<order_id>/products/<product_id>
-
-delete_products  DELETE   /orders/<order_id>/products/<product_id>
 
 The test cases have 95% test coverage and can be run with nosetests

@@ -21,7 +21,7 @@ Download [Vagrant](https://www.vagrantup.com/)
 
 Then all you have to do is clone this repo and invoke vagrant:
 
-    git clone https://github.com/devopsorders/orders.git
+    git clone https://github.com/NYU-Devops-orders/orders
     cd orders
     vagrant up
     vagrant ssh

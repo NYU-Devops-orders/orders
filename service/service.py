@@ -3,9 +3,9 @@ Orders
 Stores orders
 """
 
-#import os
-#import sys
-#import logging
+import os
+import sys
+import logging
 from flask import  jsonify, request, url_for, make_response, abort #Flask,
 from flask_api import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
@@ -31,7 +31,7 @@ def request_validation_error(error):
 def bad_request(error):
     """ Handles bad reuests with 400_BAD_REQUEST """
     message = str(error)
-    app.logger.warning(message)
+    app.logger.warning(message)# pylint: disable=maybe-no-member
     return (
         jsonify(
             status=status.HTTP_400_BAD_REQUEST, error="Bad Request", message=message
@@ -43,7 +43,7 @@ def bad_request(error):
 def not_found(error):
     """ Handles resources not found with 404_NOT_FOUND """
     message = str(error)
-    app.logger.warning(message)
+    app.logger.warning(message)# pylint: disable=maybe-no-member
     return (
         jsonify(status=status.HTTP_404_NOT_FOUND, error="Not Found", message=message),
         status.HTTP_404_NOT_FOUND,
@@ -53,7 +53,7 @@ def not_found(error):
 def method_not_supported(error):
     """ Handles unsuppoted HTTP methods with 405_METHOD_NOT_SUPPORTED """
     message = str(error)
-    app.logger.warning(message)
+    app.logger.warning(message)# pylint: disable=maybe-no-member
     return (
         jsonify(
             status=status.HTTP_405_METHOD_NOT_ALLOWED,
@@ -67,7 +67,7 @@ def method_not_supported(error):
 def mediatype_not_supported(error):
     """ Handles unsuppoted media requests with 415_UNSUPPORTED_MEDIA_TYPE """
     message = str(error)
-    app.logger.warning(message)
+    app.logger.warning(message)# pylint: disable=maybe-no-member
     return (
         jsonify(
             status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
@@ -81,7 +81,7 @@ def mediatype_not_supported(error):
 def internal_server_error(error):
     """ Handles unexpected server error with 500_SERVER_ERROR """
     message = str(error)
-    app.logger.error(message)
+    app.logger.error(message)# pylint: disable=maybe-no-member
     return (
         jsonify(
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -98,11 +98,7 @@ def internal_server_error(error):
 def index():
     """ Root URL response """
     return (
-        jsonify(
-            name="Order REST API Service",
-            version="1.0",
-            paths=url_for("list_orders", _external=True),
-        ),
+        "Reminder: return some useful information in json format about the service here",
         status.HTTP_200_OK,
     )
 
@@ -112,7 +108,7 @@ def index():
 
 def init_db():
     """ Initialies the SQLAlchemy app """
-    global app # pylint: disable=locally-disabled, invalid-name
+    global app
     Order.init_db(app)
 
 ######################################################################
@@ -121,7 +117,7 @@ def init_db():
 @app.route("/orders", methods=["GET"])
 def list_orders():
     """ Returns all of the Orders """
-    app.logger.info("Request for Order list")
+    app.logger.info("Request for Order list")# pylint: disable=maybe-no-member
     orders = []
     name = request.args.get("name")
     if name:
@@ -141,7 +137,7 @@ def get_orders(order_id):
     Retrieve a single Order
     This endpoint will return an Order based on it's id
     """
-    app.logger.info("Request for Order with id: %s", order_id)
+    app.logger.info("Request for Order with id: %s", order_id)# pylint: disable=maybe-no-member
     order = Order.find_or_404(order_id)
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
 
@@ -154,7 +150,7 @@ def create_orders():
     Creates an Order
     This endpoint will create an Order based the data in the body that is posted
     """
-    app.logger.info("Request to create an Order")
+    app.logger.info("Request to create an Order")# pylint: disable=maybe-no-member
     check_content_type("application/json")
     order = Order()
     order.deserialize(request.get_json())
@@ -174,7 +170,7 @@ def update_orders(order_id):
     Update an Order
     This endpoint will update an Order based the body that is posted
     """
-    app.logger.info("Request to update order with id: %s", order_id)
+    app.logger.info("Request to update order with id: %s", order_id)# pylint: disable=maybe-no-member
     check_content_type("application/json")
     order = Order.find(order_id)
     if not order:
@@ -193,7 +189,7 @@ def delete_orders(order_id):
     Delete an Order
     This endpoint will delete an Order based the id specified in the path
     """
-    app.logger.info("Request to delete order with id: %s", order_id)
+    app.logger.info("Request to delete order with id: %s", order_id)# pylint: disable=maybe-no-member
     order = Order.find(order_id)
     if order:
         order.delete()
@@ -208,7 +204,7 @@ def delete_orders(order_id):
 @app.route("/orders/<int:order_id>/products", methods=["GET"])
 def list_products(order_id):
     """ Returns all of the Products for an Order """
-    app.logger.info("Request for Order Products...")
+    app.logger.info("Request for Order Products...")# pylint: disable=maybe-no-member
     order = Order.find_or_404(order_id)
     results = [product.serialize() for product in order.products]
     return make_response(jsonify(results), status.HTTP_200_OK)
@@ -222,7 +218,7 @@ def create_products(order_id):
     Create an Product on an Order
     This endpoint will add an product to an order
     """
-    app.logger.info("Request to add an product to an order")
+    app.logger.info("Request to add an product to an order")# pylint: disable=maybe-no-member
     check_content_type("application/json")
     order = Order.find_or_404(order_id)
     product = Product()
@@ -241,7 +237,7 @@ def get_products(order_id, product_id): # pylint: disable=unused-argument
     Get an Product
     This endpoint returns just an product
     """
-    app.logger.info("Request to get an product with id: %s", product_id)
+    app.logger.info("Request to get an product with id: %s", product_id)# pylint: disable=maybe-no-member
     product = Product.find_or_404(product_id)
     return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
 
@@ -254,7 +250,7 @@ def update_products(order_id, product_id): # pylint: disable=unused-argument
     Update an Product
     This endpoint will update an Product based the body that is posted
     """
-    app.logger.info("Request to update product with id: %s", product_id)
+    app.logger.info("Request to update product with id: %s", product_id)# pylint: disable=maybe-no-member
     check_content_type("application/json")
     product = Product.find_or_404(product_id)
     product.deserialize(request.get_json())
@@ -271,7 +267,7 @@ def delete_products(order_id, product_id):
     Delete an Product
     This endpoint will delete an Product based the id specified in the path
     """
-    app.logger.info("Request to delete order with id: %s", order_id)
+    app.logger.info("Request to delete order with id: %s", order_id) # pylint: disable=maybe-no-member
     product = Product.find(product_id)
     if product:
         product.delete()
@@ -285,12 +281,12 @@ def init_db():
     """ Initialies the SQLAlchemy app """
     global app # pylint: disable=locally-disabled, invalid-name
     Order.init_db(app)
- 
+
 def check_content_type(content_type):
     """ Checks that the media type is correct """
     if request.headers["Content-Type"] == content_type:
         return
-    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])# pylint: disable=maybe-no-member
     abort(415, "Content-Type must be {}".format(content_type))
 
 ######################################################################

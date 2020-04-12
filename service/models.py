@@ -32,21 +32,21 @@ class PersistentBase():
         """
         Creates a Order to the database
         """
-        logger.info("Creating %s", self.name)
+        logger.info("Creating %s", self.name)# pylint: disable=maybe-no-member
         self.id = None  # id must be none to generate next primary key
-        db.session.add(self)
-        db.session.commit()
+        db.session.add(self)# pylint: disable=maybe-no-member
+        db.session.commit()# pylint: disable=maybe-no-member
 
     def save(self):
         """ Updates a Order to the database """
-        logger.info("Saving %s", self.name)
-        db.session.commit()
+        logger.info("Saving %s", self.name)# pylint: disable=maybe-no-member
+        db.session.commit()# pylint: disable=maybe-no-member
 
     def delete(self):
         """ Removes a Order from the data store """
-        logger.info("Deleting %s", self.name)
-        db.session.delete(self)
-        db.session.commit()
+        logger.info("Deleting %s", self.name)# pylint: disable=maybe-no-member
+        db.session.delete(self)# pylint: disable=maybe-no-member
+        db.session.commit()# pylint: disable=maybe-no-member
 
     @classmethod
     def init_db(cls, app):
@@ -62,19 +62,19 @@ class PersistentBase():
     def all(cls):
         """ Returns all of the records in the database """
         logger.info("Processing all records")
-        return cls.query.all()
+        return cls.query.all()# pylint: disable=maybe-no-member
 
     @classmethod
     def find(cls, by_id):
         """ Finds a record by it's ID """
         logger.info("Processing lookup for id %s ...", by_id)
-        return cls.query.get(by_id)
+        return cls.query.get(by_id)# pylint: disable=maybe-no-member
 
     @classmethod
     def find_or_404(cls, by_id):
         """ Find a record by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
-        return cls.query.get_or_404(by_id)
+        return cls.query.get_or_404(by_id)# pylint: disable=maybe-no-member
 
 
 ######################################################################
@@ -85,11 +85,11 @@ class Product(db.Model, PersistentBase):
     Class that represents a Product
     """
     # Table Schema
-    id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
-    quantity = db.Column(db.Integer)
-    price = db.Column(db.Integer)
-    name = db.Column(db.String(64))
+    id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)# pylint: disable=maybe-no-member
+    quantity = db.Column(db.Integer)# pylint: disable=maybe-no-member
+    price = db.Column(db.Integer)# pylint: disable=maybe-no-member
+    name = db.Column(db.String(64))# pylint: disable=maybe-no-member
     def __repr__(self):
         return "<Product %r id=[%s] order[%s]>" % (self.name, self.id, self.order_id)
     def __str__(self):
@@ -131,10 +131,12 @@ class Order(db.Model, PersistentBase):
     """
     app = None
     # Table Schema
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    status = db.Column(db.String(63), nullable=False)
-    products = db.relationship('Product', backref='order', lazy=True)
+
+    id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
+    name = db.Column(db.String(64))# pylint: disable=maybe-no-member
+    status = db.Column(db.String(64))# pylint: disable=maybe-no-member
+    products = db.relationship('Product', backref='order', lazy=True)# pylint: disable=maybe-no-member
+
     def __repr__(self):
         return "<Order %r id=[%s]>" % (self.name, self.id)
     def serialize(self):

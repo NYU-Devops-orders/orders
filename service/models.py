@@ -14,7 +14,13 @@ class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
     pass
 
-# DATETIME_FORMAT='%Y-%m-%d %H:%M:%S.%f'
+class OrderStatus:
+    RECEIVED = 'received'
+    PROCESSING = 'processing'
+    SHIPPED = 'shipped'
+    DELIVERED = 'delivered'
+    CANCELED = 'canceled'
+
 
 ######################################################################
 #  P E R S I S T E N T   B A S E   M O D E L
@@ -127,7 +133,7 @@ class Order(db.Model, PersistentBase):
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    status = db.Column(db.String(64))
+    status = db.Column(db.String(63), nullable=False)
     products = db.relationship('Product', backref='order', lazy=True)
     def __repr__(self):
         return "<Order %r id=[%s]>" % (self.name, self.id)

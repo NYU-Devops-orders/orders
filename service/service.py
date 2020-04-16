@@ -98,8 +98,7 @@ def internal_server_error(error):
 def index():
     """ Root URL response """
     return (
-        "Reminder: return some useful information in json format about the service here",
-        status.HTTP_200_OK,
+        "<html><head><title>Wishlist Demo RESTful Service</title></head><body>Wishlist Demo RESTful Service</body></html>"
     )
 
 ######################################################################

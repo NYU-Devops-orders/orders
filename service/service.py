@@ -129,6 +129,15 @@ def list_orders():
     return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
+# DELETE ALL Order DATA (for testing only)
+######################################################################
+@app.route('/orders/reset', methods=['DELETE'])
+def orders_reset():
+    """ Removes all orders from the database """
+    Order.remove_all()
+    return make_response('', status.HTTP_204_NO_CONTENT)
+
+######################################################################
 # RETRIEVE AN ORDER
 ######################################################################
 @app.route("/orders/<int:order_id>", methods=["GET"])

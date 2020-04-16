@@ -182,12 +182,4 @@ class Order(db.Model, PersistentBase):
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
     
- ######################################################################
-# DELETE ALL WISHLIST DATA (for testing only)
-######################################################################
-@app.route('/orders/reset', methods=['DELETE'])
-def orders_reset():
-    """ Removes all orders from the database """
-    Order.remove_all()
-    return make_response('', status.HTTP_204_NO_CONTENT)
 

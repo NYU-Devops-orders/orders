@@ -5,12 +5,12 @@ Feature: The order service back-end
 
 Background:
     Given the following wishlists
-        | name   | customer_email          |
-        | A      | kunal@stern.nyu.edu     |
-        | B      | prat@stern.nyu.edu      |
-        | C      | kiril@stern.nyu.edu     |
-        | D      | michelle@stern.nyu.edu  |
-        | E      | pratyush@stern.nyu.edu  |
+        | name   | order_id|
+        | A      | 1       |
+        | B      | 2       |
+        | C      | 3       |
+        | D      | 4       |
+        | E      | 5       |
      
 Scenario: The server is running
     When I visit the "Home Page"

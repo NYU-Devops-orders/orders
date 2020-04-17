@@ -96,10 +96,7 @@ def internal_server_error(error):
 ######################################################################
 @app.route("/")
 def index():
-    """ Root URL response """
-    return (
-        "<html><head><title>Wishlist Demo RESTful Service</title></head><body>Wishlist Demo RESTful Service</body></html>"
-    )
+    return app.send_static_file('index.html')
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
@@ -130,11 +127,11 @@ def list_orders():
 ######################################################################
 # DELETE ALL Order DATA (for testing only)
 ######################################################################
-@app.route('/orders/reset', methods=['DELETE'])
-def orders_reset():
-    """ Removes all orders from the database """
-    Order.remove_all()
-    return make_response('', status.HTTP_204_NO_CONTENT)
+#@app.route('/orders/reset', methods=['DELETE'])
+#def orders_reset():
+#    """ Removes all orders from the database """
+#    Order.remove_all()
+#    return make_response('', status.HTTP_204_NO_CONTENT)
 
 ######################################################################
 # RETRIEVE AN ORDER

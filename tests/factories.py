@@ -27,7 +27,7 @@ class ProductFactory(factory.Factory):
         """ Creates fake Products """
         model = Product
 
-    id = factory.Sequence(lambda n: n)
+    product_id = factory.Sequence(lambda n: n)
 #	order_id = ???
     name = factory.Faker("name")
     price = factory.fuzzy.FuzzyInteger(0, 100)
@@ -43,4 +43,4 @@ class OrderFactory(factory.Factory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("name")
-    status = FuzzyChoice(choices=["Delivered", "In Progress", "Cancelled"])
+    status = FuzzyChoice(choices=["Delivered", "Processsing", "Canceled", "Shipped", "Received"])

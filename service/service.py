@@ -6,14 +6,14 @@ Stores orders
 import os
 import sys
 import logging
-from flask import  jsonify, request, url_for, make_response, abort #Flask,
+from flask import  json,jsonify, request, url_for, make_response, abort #Flask,
 from flask_api import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 #from flask_sqlalchemy import SQLAlchemy
-from service.models import Order, Product, DataValidationError,OrderStatus
+from service.models import Order, Product, DataValidationError, OrderStatus
 
 # Import Flask application
 from . import app
@@ -113,7 +113,7 @@ def init_db():
 @app.route("/orders", methods=["GET"])
 def list_orders():
     """ Returns all of the Orders """
-    app.logger.info("Request for Order list")# pylint: disable=maybe-no-member
+    app.logger.info("Request for orders list")# pylint: disable=maybe-no-member
     orders = []
     name = request.args.get("name")
     if name:
@@ -142,8 +142,14 @@ def get_orders(order_id):
     Retrieve a single Order
     This endpoint will return an Order based on it's id
     """
-    app.logger.info("Request for Order with id: %s", order_id)# pylint: disable=maybe-no-member
-    order = Order.find_or_404(order_id)
+#    app.logger.info("Request for Order with id: %s", order_id)# pylint: disable=maybe-no-member
+#    order = Order.find_or_404(order_id)
+#    return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
+
+    app.logger.info("Request to read an order with id: %s")
+    order = Order.find(order_id)
+    if not order:
+        raise NotFound("order with id '{}' was not found.".format(order_id))
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
 
 ######################################################################
@@ -156,6 +162,7 @@ def create_orders():
     This endpoint will create an Order based the data in the body that is posted
     """
     app.logger.info("Request to create an Order")# pylint: disable=maybe-no-member
+    app.logger.info(request.get_json())
     check_content_type("application/json")
     order = Order()
     order.deserialize(request.get_json())
@@ -282,11 +289,6 @@ def delete_products(order_id, product_id):
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
-def init_db():
-    """ Initialies the SQLAlchemy app """
-    global app # pylint: disable=locally-disabled, invalid-name
-    Order.init_db(app)
-
 def check_content_type(content_type):
     """ Checks that the media type is correct """
     if request.headers["Content-Type"] == content_type:
@@ -310,7 +312,7 @@ def cancel_orders(order_id):
 
     # TODO should probably check to make sure this order hasn't been shipped or delivered first
     order.id = order_id
-    order.status = OrderStatus.CANCELED
+    order.status = OrderStatus.Canceled
     order.save()
     # Notify other systems like shipping/billing of cancellation...
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)

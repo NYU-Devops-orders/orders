@@ -65,7 +65,7 @@ class TestOrder(unittest.TestCase):
             price=fake_product.price
         )
         self.assertTrue(product is not None)
-        self.assertEqual(product.id, None)
+        self.assertEqual(product.product_id, None)
         return product
 
 
@@ -156,7 +156,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(serial_order['status'], order.status)
         self.assertEqual(len(serial_order['products']), 1)
         products = serial_order['products']
-        self.assertEqual(products[0]['id'], product.id)
+        self.assertEqual(products[0]['product_id'], product.product_id)
         self.assertEqual(products[0]['order_id'], product.order_id)
         self.assertEqual(products[0]['name'], product.name)
         self.assertEqual(products[0]['quantity'], product.quantity)

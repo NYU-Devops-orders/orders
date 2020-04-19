@@ -8,18 +8,18 @@ from flask_sqlalchemy import SQLAlchemy
 logger = logging.getLogger("flask.app") # pylint: disable=locally-disabled, invalid-name
 
 # Create the SQLAlchemy object to be initialized later in init_db()
-db = SQLAlchemy() # pylint: disable=locally-disabled, invalid-name
+db = SQLAlchemy()
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
     pass
 
 class OrderStatus:
-    RECEIVED = 'received'
-    PROCESSING = 'processing'
-    SHIPPED = 'shipped'
-    DELIVERED = 'delivered'
-    CANCELED = 'canceled'
+    Received = 'received'
+    Processing = 'processing'
+    Shipped = 'shipped'
+    Delivered = 'delivered'
+    Canceled = 'canceled'
 
 
 ######################################################################
@@ -85,19 +85,20 @@ class Product(db.Model, PersistentBase):
     Class that represents a Product
     """
     # Table Schema
-    id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)# pylint: disable=maybe-no-member
-    quantity = db.Column(db.Integer)# pylint: disable=maybe-no-member
-    price = db.Column(db.Integer)# pylint: disable=maybe-no-member
-    name = db.Column(db.String(64))# pylint: disable=maybe-no-member
+    product_id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id', ondelete='CASCADE'), nullable=False)# pylint: disable=maybe-no-member
+    quantity = db.Column(db.Integer, nullable=False)# pylint: disable=maybe-no-member
+    price = db.Column(db.Float, nullable=False)# pylint: disable=maybe-no-member
+    name = db.Column(db.String(64), nullable=False)# pylint: disable=maybe-no-member
+    #product_id = db.Column(db.Integer, nullable=False)# pylint: disable=maybe-no-member
     def __repr__(self):
-        return "<Product %r id=[%s] order[%s]>" % (self.name, self.id, self.order_id)
+        return "<Product %r id=[%s] order[%s]>" % (self.name, self.product_id, self.order_id)
     def __str__(self):
         return "%s: %s, %s" % (self.name, self.quantity, self.price)
     def serialize(self):
         """ Serializes a Product into a dictionary """
         return {
-            "id": self.id,
+            "product_id": self.product_id,
             "order_id": self.order_id,
             "name": self.name,
             "quantity": self.quantity,
@@ -116,10 +117,10 @@ class Product(db.Model, PersistentBase):
             self.quantity = data["quantity"]
             self.price = data["price"]
         except KeyError as error:
-            raise DataValidationError("Invalid Item: missing " + error.args[0])
+            raise DataValidationError("Invalid Product: missing " + error.args[0])
         except TypeError as error:
             raise DataValidationError(
-                "Invalid Item: body of request contained" "bad or no data"
+                "Invalid Product: body of request contained" "bad or no data"
             )
         return self
 ######################################################################
@@ -135,7 +136,7 @@ class Order(db.Model, PersistentBase):
     id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
     name = db.Column(db.String(64))# pylint: disable=maybe-no-member
     status = db.Column(db.String(64))# pylint: disable=maybe-no-member
-    products = db.relationship('Product', backref='order', lazy=True)# pylint: disable=maybe-no-member
+    products = db.relationship('Product', backref='order', lazy=True, passive_deletes=True)# pylint: disable=maybe-no-member
 
     def __repr__(self):
         return "<Order %r id=[%s]>" % (self.name, self.id)
@@ -145,10 +146,9 @@ class Order(db.Model, PersistentBase):
             "id": self.id,
             "name": self.name,
             "status": self.status,
-            "products": []
+            "products": [product.serialize() for product in self.products]
         }
-        for product in self.products:
-            order['products'].append(product.serialize())
+        
         return order
     def deserialize(self, data):
         """
@@ -161,10 +161,11 @@ class Order(db.Model, PersistentBase):
             self.status = data["status"]
             # handle inner list of products
             product_list = data.get("products")
-            for json_product in product_list:
-                product = Product()
-                product.deserialize(json_product)
-                self.products.append(product)
+            for product in data['products']:
+                self.products.append(Product(product_id=product['product_id'],
+                                                  name=product['name'],
+                                                  quantity=product['quantity'],
+                                                  price=float(product['price'])))
         except KeyError as error:
             raise DataValidationError("Invalid Order: missing " + error.args[0])
         except TypeError as error:
@@ -180,6 +181,4 @@ class Order(db.Model, PersistentBase):
             name(string): the name on the Orders you want to match
         """
         logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)
-    
-
+        return cls.query.filter(cls.name == name)    

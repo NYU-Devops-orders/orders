@@ -240,7 +240,7 @@ class TestYourResourceServer(TestCase):
 
         data = resp.get_json()
         logging.debug(data)
-        product_id = data["id"]
+        product_id = data["product_id"]
 
         # retrieve it back
         resp = self.app.get(
@@ -267,7 +267,7 @@ class TestYourResourceServer(TestCase):
 
         data = resp.get_json()
         logging.debug(data)
-        product_id = data["id"]
+        product_id = data["product_id"]
         data["name"] = "XXXX"
 
         # send the update back
@@ -286,7 +286,7 @@ class TestYourResourceServer(TestCase):
 
         data = resp.get_json()
         logging.debug(data)
-        self.assertEqual(data["id"], product_id)
+        self.assertEqual(data["product_id"], product_id)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], "XXXX")
 
@@ -300,7 +300,7 @@ class TestYourResourceServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED) # pylint: disable=maybe-no-member
         data = resp.get_json() # pylint: disable=maybe-no-member
         logging.debug(data)
-        product_id = data["id"]
+        product_id = data["product_id"]
 
         # send delete request
         resp = self.app.delete(
@@ -323,7 +323,7 @@ class TestYourResourceServer(TestCase):
                             content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         cancelled_order = resp.get_json()
-        self.assertEqual(cancelled_order['status'], OrderStatus.CANCELED)
+        self.assertEqual(cancelled_order['status'], OrderStatus.Canceled)
 
     def test_cancel_non_existent_order(self):
         """ Cancel an order that doesn't exist """

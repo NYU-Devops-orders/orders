@@ -13,7 +13,7 @@ from flask import Flask
 app = Flask(__name__) # pylint: disable=locally-disabled, invalid-name
 app.config.from_object('config')
 
-# Import the rutes After the Flask app is created
+# Import the routes After the Flask app is created
 from service import service, models
 
 # Set up logging for production
@@ -23,8 +23,7 @@ if __name__ != '__main__':
     app.logger.setLevel(GUNICORN_LOGGER.level)# pylint: disable=maybe-no-member
     app.logger.propagate = False
     # Make all log formats consistent
-    formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] [%(module)s] %(message)s", # pylint: disable=maybe-no-member
-                                  "%Y-%m-%d %H:%M:%S %z") # pylint: disable=locally-disabled, invalid-name
+    formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] [%(module)s] %(message)s", "%Y-%m-%d %H:%M:%S %z") # pylint: disable=locally-disabled, invalid-name
     for handler in app.logger.handlers:
         handler.setFormatter(formatter)
     app.logger.info('Logging handler established') # pylint: disable=maybe-no-member

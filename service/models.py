@@ -163,9 +163,7 @@ class Order(db.Model, PersistentBase):
             product_list = data.get("products")
             for product in data['products']:
                 self.products.append(Product(product_id=product['product_id'],
-                                                  name=product['name'],
-                                                  quantity=product['quantity'],
-                                                  price=float(product['price'])))
+                name=product['name'], quantity=product['quantity'], price=float(product['price'])))
         except KeyError as error:
             raise DataValidationError("Invalid Order: missing " + error.args[0])
         except TypeError as error:

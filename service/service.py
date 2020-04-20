@@ -6,7 +6,7 @@ Stores orders
 import os
 import sys
 import logging
-from flask import  json,jsonify, request, url_for, make_response, abort #Flask,
+from flask import  json, jsonify, request, url_for, make_response, abort #Flask,
 from flask_api import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
 
@@ -162,7 +162,7 @@ def create_orders():
     This endpoint will create an Order based the data in the body that is posted
     """
     app.logger.info("Request to create an Order")# pylint: disable=maybe-no-member
-    app.logger.info(request.get_json())
+    app.logger.info(request.get_json())# pylint: disable=maybe-no-member
     check_content_type("application/json")
     order = Order()
     order.deserialize(request.get_json())
@@ -305,7 +305,7 @@ def cancel_orders(order_id):
     Cancel the order
     This endpoint will cancel the order and tell other squads
     """
-    app.logger.info('Request to cancel the order with id: %s', order_id)
+    app.logger.info('Request to cancel the order with id: %s', order_id)# pylint: disable=maybe-no-member
     order = Order.find(order_id)
     if not order:
         raise NotFound("Order with the id '{}' was not found.".format(order_id))

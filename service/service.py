@@ -99,15 +99,6 @@ def index():
     return app.send_static_file('index.html')
 
 ######################################################################
-#  U T I L I T Y   F U N C T I O N S
-######################################################################
-
-def init_db():
-    """ Initialies the SQLAlchemy app """
-    global app
-    Order.init_db(app)
-
-######################################################################
 # LIST ALL Orders
 ######################################################################
 @app.route("/orders", methods=["GET"])
@@ -123,15 +114,15 @@ def list_orders():
 
     results = [order.serialize() for order in orders]
     return make_response(jsonify(results), status.HTTP_200_OK)
-
+    
 ######################################################################
 # DELETE ALL Order DATA (for testing only)
 ######################################################################
-#@app.route('/orders/reset', methods=['DELETE'])
-#def orders_reset():
-#    """ Removes all orders from the database """
-#    Order.remove_all()
-#    return make_response('', status.HTTP_204_NO_CONTENT)
+@app.route('/orders/reset', methods=['DELETE'])
+def orders_reset():
+    """ Removes all orders from the database """
+    Order.remove_all()
+    return make_response('', status.HTTP_204_NO_CONTENT)
 
 ######################################################################
 # RETRIEVE AN ORDER
@@ -286,17 +277,6 @@ def delete_products(order_id, product_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
-#  U T I L I T Y   F U N C T I O N S
-######################################################################
-
-def check_content_type(content_type):
-    """ Checks that the media type is correct """
-    if request.headers["Content-Type"] == content_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])# pylint: disable=maybe-no-member
-    abort(415, "Content-Type must be {}".format(content_type))
-
-######################################################################
 # CANCEL AN ORDER
 ######################################################################
 @app.route('/orders/<int:order_id>/cancel', methods=['PUT'])
@@ -316,3 +296,21 @@ def cancel_orders(order_id):
     order.save()
     # Notify other systems like shipping/billing of cancellation...
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
+
+######################################################################
+#  U T I L I T Y   F U N C T I O N S
+######################################################################
+
+def init_db():
+    """ Initialies the SQLAlchemy app """
+    global app
+    Order.init_db(app)
+
+
+def check_content_type(content_type):
+    """ Checks that the media type is correct """
+    if request.headers["Content-Type"] == content_type:
+        return
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])# pylint: disable=maybe-no-member
+    abort(415, "Content-Type must be {}".format(content_type))
+

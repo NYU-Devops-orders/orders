@@ -5,7 +5,7 @@ Feature: The order store service back-end
 
   Background:
     Given the following orders
-      | Name           | product_id | product_name         | quantity | price | status   |
+      | name           | product_id | product_name         | quantity | price | status   |
       | Jake           | 1          | protein bars         | 2        | 18.25 | received |
       | Dave           | 2          | airpods              | 1        | 199   | received |
       | Ally           | 3          | notebook             | 1        | 5.49  | shipped  |
@@ -16,4 +16,11 @@ Feature: The order store service back-end
     Then I should see "Order RESTful Service" in the title
     And I should not see "404 Not Found"
 
- 
+  Scenario: List all orders
+    When I visit the "Home Page"
+    And I press the "List" order button
+    Then I should see "protein bars" in the results
+    And I should see "airpods" in the results
+    And I should see "notebook" in the results
+    And I should see "shirt" in the results
+    Then I should see the message "Success" 

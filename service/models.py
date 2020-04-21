@@ -59,6 +59,11 @@ class PersistentBase():
         db.create_all()  # make our sqlalchemy tables
 
     @classmethod
+    def remove_all(cls):
+        """ Removes all documents from the database (use for testing)  """
+        cls.query.delete()
+
+    @classmethod
     def all(cls):
         """ Returns all of the records in the database """
         logger.info("Processing all records")
@@ -179,4 +184,4 @@ class Order(db.Model, PersistentBase):
             name(string): the name on the Orders you want to match
         """
         logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)    
+        return cls.query.filter(cls.name == name)   

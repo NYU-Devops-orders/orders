@@ -7,7 +7,7 @@ $(function () {
     // Updates the form with data from the response
     function update_form_data(res) {
         $("#order_id").val(res._id);
-        $("#order_name").val(res.name);
+        $("#name").val(res.name);
         $("#order_status").val(res.status);
         $("#order_product_id").val(res.products[0].product_id);
         $("#product_name").val(res.products[0].name);
@@ -18,7 +18,7 @@ $(function () {
     /// Clears all form fields
     function clear_form_data() {
         $("#order_id").val("");
-        $("#order_name").val("");
+        $("#name").val("");
         $("#order_product_id").val("");
         $("#product_name").val("");
         $("#order_quantity").val("");
@@ -37,7 +37,7 @@ $(function () {
     // ****************************************
 
     $("#create-btn").click(function () {
-        var name = $("#order_name").val();
+        var name = $("#name").val();
         var product_id = $("#order_product_id").val();
         var item_name = $("#product_name").val();
         var qty = $("#order_quantity").val();
@@ -57,7 +57,7 @@ $(function () {
 
         var ajax = $.ajax({
             type: "POST",
-            url: "/orders",
+            url: "/orders/",
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -83,7 +83,7 @@ $(function () {
             flash_message("Order ID is required to update!");
             return;
         }
-        var name = $("#order_name").val();
+        var name = $("#name").val();
         var product_id = $("#order_product_id").val();
         var item_name = $("#product_name").val();
         var qty = $("#order_quantity").val();
@@ -186,7 +186,7 @@ $(function () {
     // ****************************************
 
     $("#search-btn").click(function() {
-        var name = $("#order_name").val();
+        var name = $("#name").val();
         var product_id = $("#order_product_id").val();
         var item_name = $("#product_name").val();
         var qty = $("#order_quantity").val();

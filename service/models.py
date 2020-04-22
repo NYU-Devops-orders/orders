@@ -59,11 +59,6 @@ class PersistentBase():
         db.create_all()  # make our sqlalchemy tables
 
     @classmethod
-    def remove_all(cls):
-        """ Removes all documents from the database (use for testing)  """
-        cls.query.delete()
-
-    @classmethod
     def all(cls):
         """ Returns all of the records in the database """
         logger.info("Processing all records")
@@ -80,7 +75,11 @@ class PersistentBase():
         """ Find a record by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)# pylint: disable=maybe-no-member
-
+   
+    @classmethod
+    def remove_all(cls):
+        """ Removes all documents from the database (use for testing)  """
+        cls.query.delete()
 
 ######################################################################
 #  P R O D U C T   M O D E L

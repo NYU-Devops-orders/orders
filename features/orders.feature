@@ -34,3 +34,14 @@ Feature: The order store service back-end
     Then I should see "Jake" in the results
     And I should see "protein bars" in the results
     Then I should see the message "Success"
+
+Scenario: Read a Order
+    When I visit the "Home Page"
+    And I set the "Name" to "Jake"
+    And I press the "Search" button
+    Then I should see "Jake" in the results
+    When I copy the "ID" field
+    And I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see "Jake" in the results

@@ -45,3 +45,14 @@ Scenario: Read a Order
     And I paste the "ID" field
     And I press the "Retrieve" button
     Then I should see "Jake" in the results
+
+  Scenario: Create an order
+    When I visit the "Home Page"
+    And I set the "Name" to "Kiril"
+    And I set the "product_id" to "15"
+    And I set the "name" to "Hair Dye"
+    And I set the "quantity" to "7"
+    And I set the "price" to "4.99"
+    And I select "RECEIVED" in the "Status" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"

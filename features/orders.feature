@@ -34,3 +34,25 @@ Feature: The order store service back-end
     Then I should see "Jake" in the results
     And I should see "protein bars" in the results
     Then I should see the message "Success"
+
+Scenario: Read a Order
+    When I visit the "Home Page"
+    And I set the "Name" to "Jake"
+    And I press the "Search" button
+    Then I should see "Jake" in the results
+    When I copy the "ID" field
+    And I press the "Clear" button
+    And I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see "Jake" in the results
+
+  Scenario: Create an order
+    When I visit the "Home Page"
+    And I set the "Name" to "Kiril"
+    And I set the "product_id" to "15"
+    And I set the "name" to "Hair Dye"
+    And I set the "quantity" to "7"
+    And I set the "price" to "4.99"
+    And I select "RECEIVED" in the "Status" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"

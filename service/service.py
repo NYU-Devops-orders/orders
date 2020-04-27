@@ -114,7 +114,7 @@ def list_orders():
 
     results = [order.serialize() for order in orders]
     return make_response(jsonify(results), status.HTTP_200_OK)
-    
+
 ######################################################################
 # DELETE ALL Order DATA (for testing only)
 ######################################################################
@@ -313,4 +313,3 @@ def check_content_type(content_type):
         return
     app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])# pylint: disable=maybe-no-member
     abort(415, "Content-Type must be {}".format(content_type))
-

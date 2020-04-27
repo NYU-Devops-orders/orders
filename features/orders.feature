@@ -67,3 +67,13 @@ Scenario: Cancel a Order
     And I paste the "ID" field
     And I press the "Retrieve" button
     Then I should see "CANCELED" in the "Status" dropdown
+
+  Scenario: Delete an Order
+    When I visit the "Home Page"
+    And I set the "Name" to "Jake"
+    And I press the "Search" button
+    Then I should see "Jake" in the results
+    When I copy the "ID" field
+    And I paste the "ID" field
+    And I press the "Delete" button
+    Then I should see the message "order has been Deleted!"

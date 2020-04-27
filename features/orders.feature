@@ -67,3 +67,28 @@ Scenario: Cancel a Order
     And I paste the "ID" field
     And I press the "Retrieve" button
     Then I should see "CANCELED" in the "Status" dropdown
+
+
+
+
+
+
+
+
+
+
+
+  Scenario: Update an order
+    When I visit the "Home Page"
+    And I set the "Name" to "Jake"
+    And I press the "Search" button
+    Then I should see "Jake" in the results
+    When I copy the "ID" field
+    And I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see "1" in the "product_id" field
+    And I should see "2" in the "quantity" field
+    When I set the "quantity" to "3"
+    And I press the "update" button
+    Then I should see "3" in the "quantity" field
+    Then I should see the message "Success"

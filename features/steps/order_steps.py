@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions
 
-WAIT_SECONDS = int(getenv('WAIT_SECONDS', '60'))
+WAIT_SECONDS = int(getenv('WAIT_SECONDS', '5'))
 
 @given('the following orders')
 def step_impl(context):
@@ -39,25 +39,20 @@ def step_impl(context):
         context.resp = requests.post(create_url, data=payload, headers=headers)
         expect(context.resp.status_code).to_equal(201)
 
-
-
 @when('I visit the "Home Page"')
 def step_impl(context):
     """ Make a call to the base URL """
     context.driver.get(context.base_url)
-
 
 @then('I should see "{message}" in the title')
 def step_impl(context, message):
     """ Check the document title for a message """
     expect(context.driver.title).to_contain(message)
 
-
 @then('I should not see "{message}"')
 def step_impl(context, message):
     error_msg = "I should not see '%s' in '%s'" % (message, context.resp.text)
     ensure(message in context.resp.text, False, error_msg)
-
 
 @when('I set the "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
@@ -119,7 +114,6 @@ def step_impl(context, element_name):
     )
     element.clear()
     element.send_keys(context.clipboard)
-
 ##################################################################
 # This code works because of the following naming convention:
 # The buttons have an id in the html hat is the button text
@@ -172,9 +166,10 @@ def step_impl(context, message):
 
 @then('I should see "{text_string}" in the "{element_name}" field')
 def step_impl(context, text_string, element_name):
-    element_id = 'order_' + element_name.lower()
-    # element = context.driver.find_element_by_id(element_id)
-    # expect(element.get_attribute('value')).to_equal(text_string)
+    if element_name.lower() == "name":
+        element_id = element_name.lower()
+    else:
+        element_id = 'order_' + element_name.lower()
     found = WebDriverWait(context.driver, WAIT_SECONDS).until(
         expected_conditions.text_to_be_present_in_element_value(
             (By.ID, element_id),

@@ -6,7 +6,7 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#order_id").val(res._id);
+        $("#order_id").val(res.id);
         $("#name").val(res.name);
         $("#order_status").val(res.status);
         $("#order_product_id").val(res.products[0].product_id);
@@ -137,7 +137,7 @@ $(function () {
         ajax.done(function(res){
             //alert(res.toSource())
             update_form_data(res)
-            flash_message("Success")
+            flash_message("Success!")
         });
 
         ajax.fail(function(res){
@@ -182,34 +182,30 @@ $(function () {
     });
 
     // ****************************************
-    // Search for orders by status
+    // Search for orders
     // ****************************************
 
     $("#search-btn").click(function() {
         var name = $("#name").val();
+        var shopcart_id = $("#shopcart_id").val();
         var product_id = $("#order_product_id").val();
         var item_name = $("#product_name").val();
         var qty = $("#order_quantity").val();
         var price = $("#order_price").val();
         var order_status = $("#order_status").val();
-
-        var query_params = {
-            "name": name,
-            "status": order_status,
-            "products": [{
-                "product_id": product_id,
-                "name": item_name,
-                "quantity": qty,
-                "price": price
-            }]
-        };
+        
+        var queryString = ""
+        
+        if (name) {
+            queryString += 'name=' + name
+        }
 
         var ajax = $.ajax({
             type: "GET",
-            url: "/orders?" + $.param(query_params),
+            url: "/orders?" + queryString,
             contentType: "application/json",
             data: ''
-        });
+        })
 
         ajax.done(function(res) {
             $("#search_results").empty();
@@ -223,6 +219,7 @@ $(function () {
             header += '<th style="width:10%">Price</th>';
             header += '<th style="width:10%">Status</th></tr>';
             $("#search_results").append(header);
+            var firstOrder = "";
             for (var i = 0; i < res.length; i++) {
                 var order = res[i];
                 var row = "<tr><td>" +
@@ -234,9 +231,17 @@ $(function () {
                     order.products[0].price + "</td><td>" +
                     order.status + "</td></tr>";
                 $("#search_results").append(row);
+                if (i == 0) {
+                    firstOrder = order;
+                }
             }
 
             $("#search_results").append('</table>');
+            
+            // copy the first result to the form
+            if (firstOrder != "") {
+                update_form_data(firstOrder)
+            }
 
             flash_message("Success");
         });

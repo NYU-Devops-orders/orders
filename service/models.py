@@ -2,7 +2,7 @@
 Models for Order
 All of the models are stored in this module
 """
-import logging, os
+import os
 import json
 import logging
 from flask_sqlalchemy import SQLAlchemy

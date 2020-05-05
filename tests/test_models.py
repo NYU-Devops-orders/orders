@@ -4,6 +4,7 @@ Test cases for Order Model
 import logging
 import unittest
 import os
+import json
 from service import app
 from service.models import Order, Product, DataValidationError, db
 from tests.factories import OrderFactory, ProductFactory

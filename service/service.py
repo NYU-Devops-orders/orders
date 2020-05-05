@@ -6,7 +6,7 @@ Stores orders
 import os
 import sys
 import logging
-from flask import  json, jsonify, request, url_for, make_response, abort #Flask,
+from flask import Flask,json, jsonify, request, url_for, make_response, abort 
 from flask_api import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
 

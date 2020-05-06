@@ -84,10 +84,10 @@ $(function () {
             return;
         }
         var name = $("#name").val();
-        var product_id = $("#order_product_id").val();
-        var item_name = $("#product_name").val();
-        var qty = $("#order_quantity").val();
-        var price = $("#order_price").val();
+        //var product_id = $("#order_product_id").val();
+        //var item_name = $("#product_name").val();
+        //var qty = $("#order_quantity").val();
+        //var price = $("#order_price").val();
         var order_status = $("#order_status").val();
 
         var data = {

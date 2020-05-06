@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions
 
-WAIT_SECONDS = int(getenv('WAIT_SECONDS', '5'))
+WAIT_SECONDS = int(getenv('WAIT_SECONDS', '60'))
 
 @given('the following orders')
 def step_impl(context):
@@ -22,7 +22,15 @@ def step_impl(context):
     # need to fix resetting
     # right now removing orders screws up the auto increment count, so can't select by ID later in behave scenarios
     context.resp = requests.delete(context.base_url + '/orders/reset')
+
     expect(context.resp.status_code).to_equal(204)
+    #orders = requests.get(context.base_url + '/orders', headers=headers)
+    #expect(orders.status_code).to_equal(200)
+
+    #for order in orders.json():
+    #    context.resp = requests.delete(context.base_url + '/orders/' + str(order['id']), headers=headers)
+    #    expect(context.resp.status_code).to_equal(204)
+
     create_url = context.base_url + '/orders'
     for row in context.table:
         data = {

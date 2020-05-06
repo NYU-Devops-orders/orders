@@ -118,11 +118,25 @@ def list_orders():
 ######################################################################
 # DELETE ALL Order DATA (for testing only)
 ######################################################################
-@app.route('/orders/reset', methods=['DELETE'])
-def orders_reset():
-    """ Removes all orders from the database """
-    Order.remove_all()
-    return make_response('', status.HTTP_204_NO_CONTENT)
+#@app.route('/orders/reset', methods=['DELETE'])
+#def orders_reset():
+#    """ Removes all orders from the database """
+#    Order.remove_all()
+#    return make_response('', status.HTTP_204_NO_CONTENT)
+
+@app.route("/orders/reset", methods=["DELETE"])
+def delete_all_orders():
+    """ Returns IDs of the Orders """
+    app.logger.info("Request for Order list")
+    orders = []
+    id = request.args.get("id")
+    if id:
+        orders = Order.find(id)
+    else:
+        orders = Order.all()
+
+    results = [order.delete() for order in orders]
+    return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
 # RETRIEVE AN ORDER
@@ -178,6 +192,9 @@ def update_orders(order_id):
     order = Order.find(order_id)
     if not order:
         raise NotFound("Order with id '{}' was not found.".format(order_id))
+
+    #order.products.delete()
+
     order.deserialize(request.get_json())
     order.id = order_id
     order.save()

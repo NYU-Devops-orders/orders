@@ -190,6 +190,18 @@ class TestYourResourceServer(TestCase):
             "/orders", json={"not": "today"}, content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+    def test_delete_all_orders(self):
+        """ Delete all orders and reset auto increment counter"""
+        self._create_orders(10)
+        resp = self.app.delete('/orders/reset',
+                               content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        # make sure they are deleted
+        resp = self.app.get('/orders',
+                            content_type='application/json')
+        data = resp.get_json()
+        self.assertEqual(len(data), 0)
 
 ######################################################################
 #  P R O D U C T S   T E S T   C A S E S

@@ -82,6 +82,7 @@ class PersistentBase():
     def remove_all(cls):
         """ Removes all documents from the database (use for testing)  """
         cls.query.delete()
+        db.session.commit()# pylint: disable=maybe-no-member
 
 ######################################################################
 #  P R O D U C T   M O D E L
@@ -92,7 +93,7 @@ class Product(db.Model, PersistentBase):
     """
     # Table Schema
     product_id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id', ondelete='CASCADE'), nullable=False)# pylint: disable=maybe-no-member
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)# pylint: disable=maybe-no-member
     quantity = db.Column(db.Integer, nullable=False)# pylint: disable=maybe-no-member
     price = db.Column(db.Float, nullable=False)# pylint: disable=maybe-no-member
     name = db.Column(db.String(64), nullable=False)# pylint: disable=maybe-no-member
@@ -142,7 +143,8 @@ class Order(db.Model, PersistentBase):
     id = db.Column(db.Integer, primary_key=True)# pylint: disable=maybe-no-member
     name = db.Column(db.String(64))# pylint: disable=maybe-no-member
     status = db.Column(db.String(64))# pylint: disable=maybe-no-member
-    products = db.relationship('Product', backref='order', lazy=True, passive_deletes=True)# pylint: disable=maybe-no-member
+    products = db.relationship('Product', cascade = "all, delete-orphan")# pylint: disable=maybe-no-member
+    #products = db.relationship('Product', backref='order', lazy='dynamic', passive_deletes=True)# pylint: disable=maybe-no-member
 
     def __repr__(self):
         return "<Order %r id=[%s]>" % (self.name, self.id)

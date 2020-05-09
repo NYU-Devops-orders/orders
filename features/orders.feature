@@ -61,8 +61,6 @@ Scenario: Cancel a Order
     And I set the "Name" to "Jake"
     And I press the "Search" button
     Then I should see "Jake" in the results
-    When I copy the "ID" field
-    And I paste the "ID" field
     And I press the "Cancel" button
     Then I should see "CANCELED" in the "Status" dropdown
 

@@ -64,8 +64,6 @@ Scenario: Cancel a Order
     When I copy the "ID" field
     And I paste the "ID" field
     And I press the "Cancel" button
-    And I paste the "ID" field
-    And I press the "Retrieve" button
     Then I should see "CANCELED" in the "Status" dropdown
 
   Scenario: Delete an Order

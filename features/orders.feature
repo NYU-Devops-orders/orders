@@ -61,7 +61,7 @@ Scenario: Cancel a Order
     And I set the "Name" to "Jake"
     And I press the "Search" button
     Then I should see "Jake" in the results
-    And I press the "Cancel" button
+    When I press the "Cancel" button
     Then I should see "CANCELED" in the "Status" dropdown
 
   Scenario: Delete an Order

@@ -80,5 +80,6 @@ Scenario: Cancel a Order
     And I press the "Search" button
     Then I should see "Jake" in the results
     Then I should see "1" in the "product_id" field
-    When I set the "product_id" to "35"
-    Then I should see "35" in the "product_id" field
+    When I set the "Name" to "Elon"
+    And I press the "update" button
+    Then I should see "Elon" in the "Name" field

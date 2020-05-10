@@ -62,7 +62,7 @@ Scenario: Cancel a Order
     And I press the "Search" button
     Then I should see "Jake" in the results
     When I press the "Cancel" button
-    Then I should see "CANCELED" in the "Status" dropdown
+    Then I should see the message "Order Canceled!"
 
   Scenario: Delete an Order
     When I visit the "Home Page"

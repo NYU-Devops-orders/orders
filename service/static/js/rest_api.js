@@ -79,15 +79,15 @@ $(function () {
 
     $("#update-btn").click(function () {
         var order_id = $("#order_id").val();
-        if (order_id === "") {
-            flash_message("Order ID is required to update!");
-            return;
-        }
+        //if (order_id === "") {
+        //    flash_message("Order ID is required to update!");
+        //    return;
+        //}
         var name = $("#name").val();
-        //var product_id = $("#order_product_id").val();
-        //var item_name = $("#product_name").val();
-        //var qty = $("#order_quantity").val();
-        //var price = $("#order_price").val();
+        var product_id = $("#order_product_id").val();
+        var item_name = $("#product_name").val();
+        var qty = $("#order_quantity").val();
+        var price = $("#order_price").val();
         var order_status = $("#order_status").val();
 
         var data = {
@@ -110,7 +110,7 @@ $(function () {
 
         ajax.done(function(res){
             update_form_data(res)
-            flash_message("Success")
+            flash_message("Updated")
         });
 
         ajax.fail(function(res){

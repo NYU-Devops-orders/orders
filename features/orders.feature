@@ -79,7 +79,6 @@ Scenario: Cancel a Order
     And I set the "Name" to "Jake"
     And I press the "Search" button
     Then I should see "Jake" in the results
-    Then I should see "1" in the "product_id" field
-    When I set the "Name" to "Elon"
+    When I set the "product_id" to "1200"
     And I press the "update" button
-    Then I should see "Elon" in the "Name" field
+    Then I should see the message "Updated"

@@ -86,10 +86,8 @@ def step_impl(context, text, element_name):
     if element_name.lower() == "name":
         element_id = element_name.lower()
     else:
-        element_id = 'order_' + element_name.lower()
-    expect(element.first_selected_option.text).to_equal(text)
-    
-        found = WebDriverWait(context.driver, WAIT_SECONDS).until(
+        element_id = 'order_' + element_name.lower()    
+    found = WebDriverWait(context.driver, WAIT_SECONDS).until(
         expected_conditions.text_to_be_present_in_element_value(
             (By.ID, element_id),
             text_string
